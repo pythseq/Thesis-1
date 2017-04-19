@@ -1,0 +1,91 @@
+########################################################################
+
+## Please define the paths to the following tools
+
+export PAIRFQ_DIR=
+export BOWTIE_DIR=
+export TRINITY_DIR=
+export CD_HIT_DIR=
+export RSEM_DIR=
+export TRANSDECODER_DIR=
+export SQLITE_DIR=
+export HMMER_DIR=
+export CMSCAN_DIR=
+export RFAM_DIR=
+export CPC_HOME=
+
+########################################################################
+
+## Following the base directories above, these are the executables
+## If your programs are root installed, these will need to be redefined
+
+export PAIRFQ_EXEC=
+export TRINITY_EXEC=
+export SQLITE_EXEC=
+export CD_HIT_EXEC=
+export TRANSDECODER_EXEC=
+export HMSEARCH_EXEC=
+export CMSCAN_EXEC=
+export CPC_EXEC=
+
+########################################################################
+
+## Define each of your accessions and species name. Ensure that files
+## are named in accordance to the README (that doesn't exist yet)
+
+export acc1=
+export acc2=
+export spec=
+
+########################################################################
+
+## Please define the following computer parameters
+
+export threads_per_node=6
+export max_ram=32
+
+########################################################################
+
+## The following define the paths and short names of the BLAST
+## databases used for filtering. 
+
+export db1=
+export db_short_name1=sprot
+export db2=
+export db_short_name2=uniref
+
+########################################################################
+
+# The following point to individual, precompiled, and empty Trinotate
+# databases. 1 and 2 should correspond to acc1 and acc2, respectively.
+
+export trinotate_db1=
+export trinotate_db2=
+
+########################################################################
+
+# The following represent functions that are called in the master
+# script that are called several times.
+
+function sortBlast {
+        sort -k1,1 -k12,12gr -k11,11g -k3,3gr $1 | sort -u -k1,1 --merge > SORTED_$1
+}
+
+# 1=list, 2=reference, 3=new_fasta
+
+function grabFasta {
+        counter=0
+        lc=`wc -l $1 | cut -f1 -d" "`
+        limit=$(( $lc + 1 ))
+
+        until [[ $counter -eq $limit ]]; do
+
+                read line
+                samtools faidx $2 $line
+                counter=$(( $counter + 1 ))
+
+        done < $1 > $3
+}
+
+########################################################################
+
